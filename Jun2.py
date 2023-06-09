@@ -7,6 +7,8 @@ import ffmpeg
 import asyncio
 import requests
 from bs4 import BeautifulSoup
+import openai
+openai.api_key = 'EDapqTGbXBdMnqRBBG7RT3BlbkFJrEESI3OlrVhh1C9slINa'
 
 intents = discord.Intents.default()
 intents.members = True
@@ -312,5 +314,29 @@ async def set_channel_permissions(ctx, channel_indices: commands.Greedy[int], ro
             await ctx.send(f"Access rights set for channel {channel.name}.")
         else:
             await ctx.send(f"Channel index {index} is out of range.")
+
+@bot.command()
+async def ques(ctx, *, question):
+    # Call the OpenAI GPT API to generate the answer
+    response = openai.Completion.create(
+        engine='text-davinci-003',
+        prompt=question,
+        max_tokens=50,
+        n=1,
+        stop=None,
+        temperature=0.7,
+        top_p=None,
+        frequency_penalty=None,
+        presence_penalty=None
+    )
+
+    # Extract the answer from the API response
+    if 'choices' in response and len(response.choices) > 0:
+        answer = response.choices[0].text.strip()
+        await ctx.send(answer)
+    else:
+        await ctx.send('Failed to retrieve the answer. Please try again.')
+
+
 
 bot.run('user bot token')
