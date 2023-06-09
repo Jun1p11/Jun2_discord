@@ -159,13 +159,16 @@ class MusicPlayer:
 music_player = MusicPlayer()
 
 @bot.command()
-async def play(ctx, *, song_title: str):
+async def play(ctx, *, song_info: str):
     voice_channel = ctx.author.voice.channel
     if not voice_channel:
         await ctx.send('You must be in a voice channel to use this command.')
         return
 
-    query = f'ytsearch:{song_title}'
+    song_title = song_info.split('-')[0].strip()
+    artist_name = song_info.split('-')[1].strip() if '-' in song_info else ''
+
+    query = f'ytsearch:{song_title} {artist_name}'
     ydl_opts = {
         'format': 'bestaudio/best',
         'quiet': True,
@@ -339,4 +342,4 @@ async def ques(ctx, *, question):
 
 
 
-bot.run('user bot token')
+bot.run('MTA5MjgxNDIzNjg1NTU3ODYyNA.Gqn1wn.CJcdxMkbmTGEEzPDRrZ-a1S_VYKUA2E9Sbj-Vo')
